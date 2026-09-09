@@ -4,6 +4,7 @@
 #include <map>
 #include <list>
 #include <algorithm>
+#include <stdexcept>
 
 namespace {
     template <typename T>
@@ -25,14 +26,32 @@ int main(int argc, char* argv[]) {
         ::sorted_insert(c, f_);
     }
 
+    std::error_code ecr{}, ecs{};
     for (const auto& mm: cache) {
         if (mm.second.size() < 2) continue;
+        const auto source = mm.second.begin();
 
-        std::cout << mm.first << "\n";
-        for (const auto& f: mm.second) {
-            std::cout << f.string() << "\n";
+        for (auto fi{std::next(source)}; fi != mm.second.end(); ++fi) {
+            ecr.clear();
+            ecs.clear();
+
+            if (fs::remove(*fi, ecr)) {
+                fs::create_symlink(*source, *fi, ecs);
+                if (ecs) {
+                    std::cerr << "Could not create symlink "
+                        << source->string() << ": "
+                        << fi->string() << "\n"
+                        << ecs.message() << "\n";
+                    throw std::runtime_error(ecs.message());
+                }
+            }else if (ecr) {
+                std::cerr << "Could not delete file "
+                    << source->string() << ": "
+                    << fi->string() << "\n"
+                    << ecr.message() << "\n";
+                throw std::runtime_error(ecr.message());
+            }
         }
-        std::cout << "\n\n";
     }
     return 0;
 }
