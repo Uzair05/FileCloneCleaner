@@ -1,0 +1,1 @@
+add_library(${FS_LIBRARY_NAME} STATIC walker.cpp)
