@@ -27,16 +27,16 @@ int main(int argc, char* argv[]) {
     }
 
     std::error_code ecr{}, ecs{};
-    for (const auto& mm : cache) {
-        if (mm.second.size() < 2) continue;
-        const auto source = mm.second.begin();
+    for (const auto& cache_item : cache) {
+        if (cache_item.second.size() < 2) continue;
+        const auto source = cache_item.second.begin();
 
-        for (auto fi{std::next(source)}; fi != mm.second.end(); ++fi) {
+        for (auto fi{std::next(source)}; fi != cache_item.second.end(); ++fi) {
             ecr.clear();
             ecs.clear();
 
             if (fs::remove(*fi, ecr)) {
-                fs::create_symlink(*source, *fi, ecs);
+                fs::create_symlink(fs::relative(*source, fi->parent_path()), *fi, ecs);
                 if (ecs) {
                     std::cerr << "Could not create symlink " << source->string() << ": "
                               << fi->string() << "\n"

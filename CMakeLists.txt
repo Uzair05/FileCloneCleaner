@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.31.6)
 project(FileCloneCleanup VERSION 1.0.0 LANGUAGES C CXX)
 
-set(EXECUTABLE_NAME app)
+set(EXECUTABLE_NAME FileCloneCleanup)
 set(SHA_LIBRARY_NAME shasum)
 set(FS_LIBRARY_NAME walker)
 
