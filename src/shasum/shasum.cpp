@@ -4,11 +4,9 @@
 #include <array>
 #include <openssl/evp.h>
 
-std::optional<std::string> sha256sum(const std::string& path) {
-    return sha256sum(fs::path(path));
-}
+std::optional<std::string> sha256sum(const std::string& path) { return sha256sum(fs::path(path)); }
 std::optional<std::string> sha256sum(const fs::path& path) {
-    if (! fs::is_regular_file(path)) return std::nullopt;
+    if (!fs::is_regular_file(path)) return std::nullopt;
 
     std::ifstream file(path.string(), std::ios::binary);
     if (!file) {
@@ -30,7 +28,8 @@ std::optional<std::string> sha256sum(const fs::path& path) {
     while (file) {
         file.read(buffer.data(), buffer.size());
         std::streamsize filesize = file.gcount();
-        if (filesize > 0 && EVP_DigestUpdate(context, buffer.data(), static_cast<std::size_t>(filesize)) != 1) {
+        if (filesize > 0 &&
+            EVP_DigestUpdate(context, buffer.data(), static_cast<std::size_t>(filesize)) != 1) {
             EVP_MD_CTX_free(context);
             std::cerr << "Could not update EVP_MD_CTX" << std::endl;
             return std::nullopt;

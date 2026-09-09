@@ -4,8 +4,7 @@ std::vector<fs::path> walk(const fs::path& path) {
     std::vector<fs::path> result{};
 
     for (const auto& f_ : fs::recursive_directory_iterator(path))
-        if (f_.is_regular_file()) result.push_back(f_);
-
+        if (f_.is_regular_file() && !f_.is_symlink()) result.push_back(f_.path());
     return result;
 }
 
