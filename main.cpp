@@ -3,6 +3,8 @@
 #include <list>
 #include <map>
 #include <stdexcept>
+
+#include <CLI/CLI.hpp>
 #include "walker.hpp"
 #include "shasum.hpp"
 
@@ -15,12 +17,16 @@ void sorted_insert(std::list<T>& l, const T& e) {
 }  // namespace
 
 int main(int argc, char* argv[]) {
-    std::map<std::string, std::list<fs::path>> cache{};
+    CLI::App app;
+    std::string current_path{};
+    app.add_option("--path", current_path, "Operating Directory")->default_str(fs::current_path().string());
 
-    for (const auto& f_ : walk(fs::current_path())) {
+    CLI11_PARSE(app, argc, argv);
+    std::map<std::string, std::list<fs::path>> cache{};
+    for (const auto& f_ : walk(fs::path(current_path))) {
         const auto res{sha256sum(f_)};
         if (!res.has_value()) continue;
-        if (cache.find(res.value()) == cache.end()) cache[res.value()] = std::list<fs::path>{};
+        if (!cache.contains(res.value())) cache[res.value()] = std::list<fs::path>{};
 
         auto& c = cache.at(res.value());
         ::sorted_insert(c, f_);

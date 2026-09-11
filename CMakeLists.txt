@@ -6,6 +6,9 @@ set(SHA_LIBRARY_NAME shasum)
 set(FS_LIBRARY_NAME walker)
 
 add_subdirectory(src)
+add_subdirectory(ext)
 add_executable(${EXECUTABLE_NAME} "main.cpp")
 target_compile_features(${EXECUTABLE_NAME} PRIVATE cxx_std_20)
+
 target_link_libraries(${EXECUTABLE_NAME} PUBLIC ${SHA_LIBRARY_NAME} ${FS_LIBRARY_NAME})
+target_link_libraries(${EXECUTABLE_NAME} PUBLIC  CLI11::CLI11)
