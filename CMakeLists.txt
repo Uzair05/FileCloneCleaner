@@ -11,6 +11,7 @@ FetchContent_Declare(
         GIT_REPOSITORY git@github.com:CLIUtils/CLI11.git
         GIT_TAG v2.7.2
         GIT_SHALLOW TRUE
+        GIT_SUBMODULES_RECURSE TRUE
     )
 
 set(CLI11_BUILD_TESTS OFF CACHE BOOL "" FORCE)
