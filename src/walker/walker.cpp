@@ -9,6 +9,6 @@ std::vector<fs::path> walk(const fs::path& path) {
 }
 
 std::vector<fs::path> walk(const std::string& path) {
-    fs::path curr(path);
+    const fs::path curr(path);
     return walk(is_directory(curr) ? curr : curr.parent_path());
 }
